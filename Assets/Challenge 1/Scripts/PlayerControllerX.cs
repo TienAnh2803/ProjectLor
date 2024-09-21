@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,15 +29,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        verticalInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-
-
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
-
-        transform.Rotate(Vector3.left, Time.deltaTime * turnSpeed * verticalInput);
-        transform.Rotate(cameRa.transform.forward, Time.deltaTime * turnSpeed * horizontalInput);
+        Rotate();
         if (Input.GetKey(KeyCode.Space))
         {
             gun.transform.Rotate(Vector3.up * spin);
@@ -54,5 +44,27 @@ public class PlayerController : MonoBehaviour
             Instantiate(bulletPre, bulletPos2.transform.position, bulletPos2.transform.rotation);
             bulletPos2.transform.rotation = transform.rotation;
         }
+    }
+
+    void Rotate()
+    {
+        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
+
+        Vector3 currentEulerAngles = transform.eulerAngles;
+
+        if (currentEulerAngles.x > 180) currentEulerAngles.x -= 360;
+        if (currentEulerAngles.y > 180) currentEulerAngles.y -= 360;
+        if (currentEulerAngles.z > 180) currentEulerAngles.z -= 360;
+
+        float newRotationX = currentEulerAngles.x - Time.deltaTime * turnSpeed * verticalInput;
+        newRotationX = Mathf.Clamp(newRotationX, -60f, 60f);
+
+
+        float newRotationY = currentEulerAngles.y - Time.deltaTime * turnSpeed * horizontalInput;
+        float newRotationZ = currentEulerAngles.z + Time.deltaTime * turnSpeed * horizontalInput;
+        newRotationZ = Mathf.Clamp(newRotationZ, -30f, 30f);
+
+        transform.eulerAngles = new Vector3(newRotationX, newRotationY, newRotationZ);
     }
 }
