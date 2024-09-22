@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
     public float turnSpeed = 0f;
     private float verticalInput;
     private float horizontalInput;
-    private GameObject cameRa;
     private GameObject gun;
     private GameObject gun2;
     public GameObject bulletPre;
@@ -18,7 +17,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cameRa = GameObject.Find("MainCamera");
         bulletPos = GameObject.Find("SpawnPos");
         bulletPos2 = GameObject.Find("SpawnPos2");
         gun = GameObject.Find("Gun");
@@ -44,6 +42,10 @@ public class PlayerController : MonoBehaviour
             Instantiate(bulletPre, bulletPos2.transform.position, bulletPos2.transform.rotation);
             bulletPos2.transform.rotation = transform.rotation;
         }
+        if(gameObject.CompareTag("Mountain"))
+        {
+            Debug.Log("asdasd");
+        }
     }
 
     void Rotate()
@@ -66,5 +68,7 @@ public class PlayerController : MonoBehaviour
         newRotationZ = Mathf.Clamp(newRotationZ, -30f, 30f);
 
         transform.eulerAngles = new Vector3(newRotationX, newRotationY, newRotationZ);
+
     }
+
 }
